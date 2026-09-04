@@ -15,6 +15,7 @@ import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as PlannerRouteImport } from './routes/planner'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as ResultsRouteImport } from './routes/results'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as TasksRouteImport } from './routes/tasks'
 import { Route as TrainsRouteImport } from './routes/trains'
 
@@ -48,6 +49,11 @@ const ResultsRoute = ResultsRouteImport.update({
   path: '/results',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TasksRoute = TasksRouteImport.update({
   id: '/tasks',
   path: '/tasks',
@@ -66,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/planner': typeof PlannerRoute
   '/reports': typeof ReportsRoute
   '/results': typeof ResultsRoute
+  '/settings': typeof SettingsRoute
   '/tasks': typeof TasksRoute
   '/trains': typeof TrainsRoute
 }
@@ -76,6 +83,7 @@ export interface FileRoutesByTo {
   '/planner': typeof PlannerRoute
   '/reports': typeof ReportsRoute
   '/results': typeof ResultsRoute
+  '/settings': typeof SettingsRoute
   '/tasks': typeof TasksRoute
   '/trains': typeof TrainsRoute
 }
@@ -87,6 +95,7 @@ export interface FileRoutesById {
   '/planner': typeof PlannerRoute
   '/reports': typeof ReportsRoute
   '/results': typeof ResultsRoute
+  '/settings': typeof SettingsRoute
   '/tasks': typeof TasksRoute
   '/trains': typeof TrainsRoute
 }
@@ -99,6 +108,7 @@ export interface FileRouteTypes {
     | '/planner'
     | '/reports'
     | '/results'
+    | '/settings'
     | '/tasks'
     | '/trains'
   fileRoutesByTo: FileRoutesByTo
@@ -109,6 +119,7 @@ export interface FileRouteTypes {
     | '/planner'
     | '/reports'
     | '/results'
+    | '/settings'
     | '/tasks'
     | '/trains'
   id:
@@ -119,6 +130,7 @@ export interface FileRouteTypes {
     | '/planner'
     | '/reports'
     | '/results'
+    | '/settings'
     | '/tasks'
     | '/trains'
   fileRoutesById: FileRoutesById
@@ -130,6 +142,7 @@ export interface RootRouteChildren {
   PlannerRoute: typeof PlannerRoute
   ReportsRoute: typeof ReportsRoute
   ResultsRoute: typeof ResultsRoute
+  SettingsRoute: typeof SettingsRoute
   TasksRoute: typeof TasksRoute
   TrainsRoute: typeof TrainsRoute
 }
@@ -178,6 +191,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResultsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tasks': {
       id: '/tasks'
       path: '/tasks'
@@ -202,6 +222,7 @@ const rootRouteChildren: RootRouteChildren = {
   PlannerRoute: PlannerRoute,
   ReportsRoute: ReportsRoute,
   ResultsRoute: ResultsRoute,
+  SettingsRoute: SettingsRoute,
   TasksRoute: TasksRoute,
   TrainsRoute: TrainsRoute,
 }
