@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TasksRouteImport } from './routes/tasks'
 import { Route as TrainsRouteImport } from './routes/trains'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TasksRoute = TasksRouteImport.update({
+  id: '/tasks',
+  path: '/tasks',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TrainsRoute = TrainsRouteImport.update({
@@ -25,27 +31,31 @@ const TrainsRoute = TrainsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/tasks': typeof TasksRoute
   '/trains': typeof TrainsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/tasks': typeof TasksRoute
   '/trains': typeof TrainsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/tasks': typeof TasksRoute
   '/trains': typeof TrainsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/trains'
+  fullPaths: '/' | '/tasks' | '/trains'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/trains'
-  id: '__root__' | '/' | '/trains'
+  to: '/' | '/tasks' | '/trains'
+  id: '__root__' | '/' | '/tasks' | '/trains'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  TasksRoute: typeof TasksRoute
   TrainsRoute: typeof TrainsRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tasks': {
+      id: '/tasks'
+      path: '/tasks'
+      fullPath: '/tasks'
+      preLoaderRoute: typeof TasksRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/trains': {
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  TasksRoute: TasksRoute,
   TrainsRoute: TrainsRoute,
 }
 export const routeTree = rootRouteImport
