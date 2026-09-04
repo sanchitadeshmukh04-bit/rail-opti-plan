@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AssetsRouteImport } from './routes/assets'
+import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as PlannerRouteImport } from './routes/planner'
 import { Route as TasksRouteImport } from './routes/tasks'
 import { Route as TrainsRouteImport } from './routes/trains'
@@ -23,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
 const AssetsRoute = AssetsRouteImport.update({
   id: '/assets',
   path: '/assets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendarRoute = CalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlannerRoute = PlannerRouteImport.update({
@@ -44,6 +50,7 @@ const TrainsRoute = TrainsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/assets': typeof AssetsRoute
+  '/calendar': typeof CalendarRoute
   '/planner': typeof PlannerRoute
   '/tasks': typeof TasksRoute
   '/trains': typeof TrainsRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/assets': typeof AssetsRoute
+  '/calendar': typeof CalendarRoute
   '/planner': typeof PlannerRoute
   '/tasks': typeof TasksRoute
   '/trains': typeof TrainsRoute
@@ -59,21 +67,30 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/assets': typeof AssetsRoute
+  '/calendar': typeof CalendarRoute
   '/planner': typeof PlannerRoute
   '/tasks': typeof TasksRoute
   '/trains': typeof TrainsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/assets' | '/planner' | '/tasks' | '/trains'
+  fullPaths: '/' | '/assets' | '/calendar' | '/planner' | '/tasks' | '/trains'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/assets' | '/planner' | '/tasks' | '/trains'
-  id: '__root__' | '/' | '/assets' | '/planner' | '/tasks' | '/trains'
+  to: '/' | '/assets' | '/calendar' | '/planner' | '/tasks' | '/trains'
+  id:
+    | '__root__'
+    | '/'
+    | '/assets'
+    | '/calendar'
+    | '/planner'
+    | '/tasks'
+    | '/trains'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AssetsRoute: typeof AssetsRoute
+  CalendarRoute: typeof CalendarRoute
   PlannerRoute: typeof PlannerRoute
   TasksRoute: typeof TasksRoute
   TrainsRoute: typeof TrainsRoute
@@ -93,6 +110,13 @@ declare module '@tanstack/react-router' {
       path: '/assets'
       fullPath: '/assets'
       preLoaderRoute: typeof AssetsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calendar': {
+      id: '/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof CalendarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/planner': {
@@ -122,6 +146,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AssetsRoute: AssetsRoute,
+  CalendarRoute: CalendarRoute,
   PlannerRoute: PlannerRoute,
   TasksRoute: TasksRoute,
   TrainsRoute: TrainsRoute,
