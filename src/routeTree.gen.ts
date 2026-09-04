@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AssetsRouteImport } from './routes/assets'
+import { Route as PlannerRouteImport } from './routes/planner'
 import { Route as TasksRouteImport } from './routes/tasks'
 import { Route as TrainsRouteImport } from './routes/trains'
 
@@ -22,6 +23,11 @@ const IndexRoute = IndexRouteImport.update({
 const AssetsRoute = AssetsRouteImport.update({
   id: '/assets',
   path: '/assets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlannerRoute = PlannerRouteImport.update({
+  id: '/planner',
+  path: '/planner',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TasksRoute = TasksRouteImport.update({
@@ -38,12 +44,14 @@ const TrainsRoute = TrainsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/assets': typeof AssetsRoute
+  '/planner': typeof PlannerRoute
   '/tasks': typeof TasksRoute
   '/trains': typeof TrainsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/assets': typeof AssetsRoute
+  '/planner': typeof PlannerRoute
   '/tasks': typeof TasksRoute
   '/trains': typeof TrainsRoute
 }
@@ -51,20 +59,22 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/assets': typeof AssetsRoute
+  '/planner': typeof PlannerRoute
   '/tasks': typeof TasksRoute
   '/trains': typeof TrainsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/assets' | '/tasks' | '/trains'
+  fullPaths: '/' | '/assets' | '/planner' | '/tasks' | '/trains'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/assets' | '/tasks' | '/trains'
-  id: '__root__' | '/' | '/assets' | '/tasks' | '/trains'
+  to: '/' | '/assets' | '/planner' | '/tasks' | '/trains'
+  id: '__root__' | '/' | '/assets' | '/planner' | '/tasks' | '/trains'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AssetsRoute: typeof AssetsRoute
+  PlannerRoute: typeof PlannerRoute
   TasksRoute: typeof TasksRoute
   TrainsRoute: typeof TrainsRoute
 }
@@ -83,6 +93,13 @@ declare module '@tanstack/react-router' {
       path: '/assets'
       fullPath: '/assets'
       preLoaderRoute: typeof AssetsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/planner': {
+      id: '/planner'
+      path: '/planner'
+      fullPath: '/planner'
+      preLoaderRoute: typeof PlannerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tasks': {
@@ -105,6 +122,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AssetsRoute: AssetsRoute,
+  PlannerRoute: PlannerRoute,
   TasksRoute: TasksRoute,
   TrainsRoute: TrainsRoute,
 }
