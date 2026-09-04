@@ -2,8 +2,8 @@ import { MAINTENANCE_WINDOWS } from "./data";
 import type { Asset, Conflict, Department, PlannedBlock, Priority, Resource, Task, Train } from "./types";
 
 export const toMin = (t: string) => {
-  const [h, m] = t.split(":").map(Number);
-  return h * 60 + m;
+  const parts = t.split(":");
+  return Number(parts[0] ?? 0) * 60 + Number(parts[1] ?? 0);
 };
 export const toHHMM = (m: number) => {
   const mm = ((m % 1440) + 1440) % 1440;
@@ -120,7 +120,7 @@ export function optimize(
     const depts = Array.from(new Set(group.map((t) => t.department))) as Department[];
     const durationMin = Math.max(...group.map((t) => t.duration)) * 60 + (depts.length - 1) * 15;
 
-    const preferred = toMin(MAINTENANCE_WINDOWS[0].start);
+    const preferred = toMin(MAINTENANCE_WINDOWS[0]?.start ?? "10:00");
     let start = preferred;
     let end = start + durationMin;
     const conflicts: Conflict[] = trainConflicts(kmFrom, kmTo, start, end, trains);
@@ -180,8 +180,9 @@ export function optimize(
       score,
       reasons,
       conflicts,
-      suggestedStart: suggested ? toHHMM(suggested.start) : undefined,
-      suggestedEnd: suggested ? toHHMM(suggested.end) : undefined,
+      ...(suggested
+        ? { suggestedStart: toHHMM(suggested.start), suggestedEnd: toHHMM(suggested.end) }
+        : {}),
       availabilityGain: Math.round(group.length * 0.6 * 10) / 10,
     });
     n += 1;
