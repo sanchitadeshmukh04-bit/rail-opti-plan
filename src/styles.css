@@ -144,6 +144,11 @@
   --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.551 0.027 264.364);
+  --success: oklch(0.65 0.13 158);
+  --success-foreground: oklch(0.16 0.03 258);
+  --warning: oklch(0.78 0.15 72);
+  --warning-foreground: oklch(0.2 0.04 60);
+  --info: oklch(0.65 0.12 250);
 }
 
 @layer base {
@@ -154,5 +159,11 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 {
+    letter-spacing: -0.015em;
   }
 }
