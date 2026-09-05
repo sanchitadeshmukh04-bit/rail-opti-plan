@@ -167,3 +167,15 @@
     letter-spacing: -0.015em;
   }
 }
+
+
+/* Remove Lovable Badge & Floating Watermarks */
+a[href*="lovable.dev"],
+a[href*="lovable.app"],
+div[class*="lovable"],
+iframe[src*="lovable"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
