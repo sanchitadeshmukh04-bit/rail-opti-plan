@@ -16,6 +16,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "https://rail-opti-plan.vercel.app",
         "http://localhost:8081",
         "http://127.0.0.1:8081",
         "http://localhost:8080",
