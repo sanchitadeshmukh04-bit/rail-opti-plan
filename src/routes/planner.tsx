@@ -55,24 +55,39 @@ function PlannerPage() {
   const [running, setRunning] = useState(false);
   const [step, setStep] = useState(-1);
 
-  const run = () => {
-    setRunning(true);
-    setStep(0);
-    let i = 0;
-    const tick = () => {
-      i += 1;
-      if (i < STEPS.length) {
-        setStep(i);
-        setTimeout(tick, 420);
-      } else {
-        const next = generatePlan();
+const run = async () => {
+  setRunning(true);
+  setStep(0);
+
+  let i = 0;
+
+  const tick = async () => {
+    i += 1;
+
+    if (i < STEPS.length) {
+      setStep(i);
+      setTimeout(tick, 420);
+    } else {
+      try {
+        const next = await generatePlan();
+
         setRunning(false);
         setStep(-1);
+
         toast.success(`${next.length} optimized blocks generated`);
+      } catch (error) {
+        console.error("Optimization failed:", error);
+
+        setRunning(false);
+        setStep(-1);
+
+        toast.error("Failed to generate optimized block plan");
       }
-    };
-    setTimeout(tick, 420);
+    }
   };
+
+  setTimeout(tick, 420);
+};
 
   return (
     <AppShell

@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 import { BASELINE, seedAssets, seedResources, seedTasks, seedTrains } from "./data";
-import { optimize, summarize } from "./optimizer";
+import { summarize } from "./optimizer";
+import { generateOptimizedPlan } from "./api";
 import type { Asset, BlockStatus, PlannedBlock, Resource, Task, Train } from "./types";
 
 interface RailState {
@@ -16,7 +17,7 @@ interface RailState {
   addTask: (t: Omit<Task, "id">) => void;
   updateTask: (id: string, t: Partial<Task>) => void;
   deleteTask: (id: string) => void;
-  generatePlan: () => PlannedBlock[];
+  generatePlan: () => Promise<PlannedBlock[]>;
   setBlockStatus: (id: string, status: BlockStatus) => void;
   applySuggestion: (id: string) => void;
   kpis: ReturnType<typeof computeKpis>;
@@ -56,19 +57,36 @@ export function RailProvider({ children }: { children: ReactNode }) {
 
   const uid = () => crypto.randomUUID();
 
-  const generatePlan = useCallback(() => {
-    const { blocks: next } = optimize(tasks, trains, assets, resources);
+  const generatePlan = useCallback(async (): Promise<PlannedBlock[]> => {
+  try {
+    const result = await generateOptimizedPlan(
+      trains,
+      assets,
+      tasks,
+      resources,
+    );
+
+    const next = result.blocks;
+
     setBlocks(next);
     setHasPlan(true);
+
     setTasks((prev) =>
       prev.map((t) =>
-        next.some((b) => b.taskIds.includes(t.taskId)) && t.status === "Pending"
+        next.some((b) => b.taskIds.includes(t.taskId)) &&
+        t.status === "Pending"
           ? { ...t, status: "Planned" }
           : t,
       ),
     );
+
     return next;
-  }, [tasks, trains, assets, resources]);
+  } catch (error) {
+    console.error("RailOpt optimization failed:", error);
+
+    throw error;
+  }
+}, [tasks, trains, assets, resources]);
 
   const setBlockStatus = useCallback((id: string, status: BlockStatus) => {
     setBlocks((prev) => prev.map((b) => (b.id === id ? { ...b, status } : b)));
